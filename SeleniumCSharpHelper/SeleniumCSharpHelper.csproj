@@ -2,6 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>David Shinkle</Authors>
+    <Company />
+    <Product />
+    <PackageTags>Selenium</PackageTags>
+    <Version>1.0.1</Version>
+    <PackageProjectUrl>https://github.com/shinks21/SeleniumCSharpHelper</PackageProjectUrl>
+    <Description>Extension methods to help with Selenium</Description>
+    <RepositoryUrl>https://github.com/shinks21/SeleniumCSharpHelper</RepositoryUrl>
+    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageReleaseNotes>Updated with github link.</PackageReleaseNotes>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
