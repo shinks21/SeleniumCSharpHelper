@@ -66,17 +66,42 @@ namespace SeleniumCSharpHelper
             return driver.FindElement(by);
         }
 
+        public static IWebElement Elements_ClickElementByText(this IWebDriver driver, By by, string text, int timeoutInSeconds = 60, int sleepTime = 1000)
+        {
+            int retries = 4;
+
+            IWebElement element = null;
+
+            for (int i = 0; i < retries; i++)
+            {
+                try
+                {
+                    var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutInSeconds));
+
+                    IReadOnlyCollection<IWebElement> elements = wait.Until(drv => drv.FindElements(by));
+
+                    element = elements.FirstOrDefault(w => w.Text == text);
+
+                    element?.Click();
+
+                    break;
+                }
+                catch (StaleElementReferenceException)
+                { }
+            }
+
+            return element;
+        }
+
         public static IWebElement Element_Click(this IWebDriver driver, By by, int timeoutInSeconds = 60)
         {
             int retries = 4;
 
             for (int i = 0; i < retries; i++)
             {
-                IWebElement webElement = null;
-
                 try
                 {
-                    webElement = Element_Find(driver, by);
+                    IWebElement webElement = Element_Find(driver, by);
 
                     if (webElement != null && webElement.Displayed)
                     {
@@ -140,6 +165,33 @@ namespace SeleniumCSharpHelper
             }
 
             return false;
+        }
+
+        public static IWebElement Element_MoveToElement(this IWebDriver driver, By by)
+        {
+            int retries = 4;
+
+            for (int i = 0; i < retries; i++)
+            {
+                try
+                {
+                    var actions = new Actions(driver);
+
+                    IWebElement webElement = driver.FindElement(by);
+                    actions.MoveToElement(webElement);
+
+                    actions.Perform();
+                    
+                    return webElement;
+                }
+                catch (StaleElementReferenceException)
+                {
+                }
+
+                Thread.Sleep(200);
+            }
+
+            return null;
         }
 
         public static IWebElement Element_SendKeys(this IWebDriver driver, By by, string text, int timeoutInSeconds = 60)
@@ -225,14 +277,26 @@ namespace SeleniumCSharpHelper
         {
             IWebElement webElement = Element_Find(driver, by);
 
-            string value = driver.ExecuteJavaScript<string>("return arguments[0].innerHTML", webElement);
+            string value = String.Empty;
+
+            for (int i = 0; i < 5; i++)
+            {
+                try
+                {
+                    value = webElement.GetAttribute(attributeName);
+
+                    break;
+                }
+                catch (StaleElementReferenceException)
+                {}
+            }
 
             return value;
         }
 
-        public static string Driver_ExecuteJavascript(this IWebDriver driver, string javascript)
+        public static object Driver_ExecuteJavascript(this IWebDriver driver, string javascript)
         {
-            string value = ((IJavaScriptExecutor)driver).ExecuteScript(javascript).ToString();
+            object value = ((IJavaScriptExecutor)driver).ExecuteScript(javascript);
 
             return value;
         }
@@ -395,9 +459,9 @@ namespace SeleniumCSharpHelper
             }
         }
 
-        public static string HiddenElement_GetText(this IWebDriver driver, string id)
+        public static object HiddenElement_GetText(this IWebDriver driver, string id)
         {
-            string text = driver.Driver_ExecuteJavascript($"return document.getElementById('{id}').value;");
+            object text = driver.Driver_ExecuteJavascript($"return document.getElementById('{id}').value;");
 
             return text;
         }
