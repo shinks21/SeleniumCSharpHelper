@@ -279,16 +279,11 @@ namespace SeleniumCSharpHelper
 
             string value = String.Empty;
 
-            for (int i = 0; i < 5; i++)
-            {
-                try
-                {
-                    value = webElement.GetAttribute(attributeName);
+            Object objectValue = driver.ExecuteJavaScript<string>("return arguments[0].innerHTML", webElement);
 
-                    break;
-                }
-                catch (StaleElementReferenceException)
-                {}
+            if (objectValue != null)
+            {
+                value = objectValue.ToString();
             }
 
             return value;
@@ -296,7 +291,14 @@ namespace SeleniumCSharpHelper
 
         public static object Driver_ExecuteJavascript(this IWebDriver driver, string javascript)
         {
-            object value = ((IJavaScriptExecutor)driver).ExecuteScript(javascript);
+            string value = String.Empty;
+
+            Object objectValue = ((IJavaScriptExecutor)driver).ExecuteScript(javascript);
+
+            if (objectValue != null)
+            {
+                value = objectValue.ToString();
+            }
 
             return value;
         }
@@ -371,7 +373,7 @@ namespace SeleniumCSharpHelper
         {
             bool visible = false;
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 10; i++)
             {
                 try
                 {
@@ -461,9 +463,21 @@ namespace SeleniumCSharpHelper
 
         public static object HiddenElement_GetText(this IWebDriver driver, string id)
         {
-            object text = driver.Driver_ExecuteJavascript($"return document.getElementById('{id}').value;");
+            string text = String.Empty;
+
+            Object objectText = driver.Driver_ExecuteJavascript($"return document.getElementById('{id}').value;");
+
+            if (objectText != null)
+            {
+                text = objectText.ToString();
+            }
 
             return text;
+        }
+
+        public static void HiddenElement_SetText(this IWebDriver driver, string id, string text)
+        {
+            driver.Driver_ExecuteJavascript($"document.getElementById('{id}').value = '{text}';");
         }
 
         public static void Element_WaitUntil(this IWebDriver driver, Action<By> functionToRun, By by, Action<By> optionalFunctionToRun = null, By optionalArg = null, int sleepTime = 500)
