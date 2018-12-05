@@ -6,7 +6,7 @@
     <Company />
     <Product />
     <PackageTags>Selenium</PackageTags>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
     <PackageProjectUrl>https://github.com/shinks21/SeleniumCSharpHelper</PackageProjectUrl>
     <Description>Extension methods to help with Selenium</Description>
     <RepositoryUrl>https://github.com/shinks21/SeleniumCSharpHelper</RepositoryUrl>
