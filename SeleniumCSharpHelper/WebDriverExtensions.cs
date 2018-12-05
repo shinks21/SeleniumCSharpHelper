@@ -461,22 +461,36 @@ namespace SeleniumCSharpHelper
             }
         }
 
-        //public static string RadioButtonElement_GetValue(this IWebDriver driver, By by)
-        //{
-        //    int retries = 4;
+        public static int RadioButtonElement_GetSelected(this IWebDriver driver, By by, string value)
+        {
+            int retries = 4;
 
-        //   // var webElements = null;
+            for (int i = 0; i < retries; i++)
+            {
+                try
+                {
+                    var webElements = driver.FindElements(by);
 
-        //    for (int i = 0; i < retries; i++)
-        //    {
-        //        try
-        //        {
-        //            IWebElement webElement = driver.FindElements(by).Where(w => w.Selected).FirstOrDefault();
-        //        }
-        //        catch (StaleElementReferenceException)
-        //        { }
-        //    }
-        //}
+                    int count = 0;
+
+                    foreach (var webElement in webElements)
+                    {
+                        if (webElement.Selected)
+                        {
+                            return count;
+                        }
+
+                        count++;
+                    }
+
+                    return -1;
+                }
+                catch (StaleElementReferenceException)
+                { }
+            }
+
+            return -1;
+        }
 
         public static object HiddenElement_GetText(this IWebDriver driver, string id)
         {
