@@ -97,10 +97,17 @@
     string text = _driver.SelectElement_GetText(By.CssSelector("[data-name='State']"));
 </code>
 
+<h2>Verify the selected radio button value</h2>
+<code>
+	string value _driver.RadioButtonElement_GetValue(By.Id("ElementId"));
+</code>
+
 <h2>View the current state of the dom</h2>
 <code>
     string pageSource = _driver.PageSource;
 
     (then plug the result into https://codebeautify.org/xmlviewer)
 </code>
+
+
 
