@@ -181,7 +181,7 @@ namespace SeleniumCSharpHelper
                     actions.MoveToElement(webElement);
 
                     actions.Perform();
-                    
+
                     return webElement;
                 }
                 catch (StaleElementReferenceException)
@@ -275,18 +275,23 @@ namespace SeleniumCSharpHelper
 
         public static string Element_GetAttribute(this IWebDriver driver, By by, string attributeName)
         {
-            IWebElement webElement = Element_Find(driver, by);
-
-            string value = String.Empty;
-
-            Object objectValue = driver.ExecuteJavaScript<string>("return arguments[0].innerHTML", webElement);
-
-            if (objectValue != null)
+            for (int i = 0; i < 5; i++)
             {
-                value = objectValue.ToString();
+                try
+                {
+                    IWebElement webElement = Element_Find(driver, by);
+
+                    string value = webElement.GetAttribute(attributeName);
+
+                    return value;
+                }
+                catch (StaleElementReferenceException)
+                { }
+
+                Thread.Sleep(200);
             }
 
-            return value;
+            return string.Empty;
         }
 
         public static object Driver_ExecuteJavascript(this IWebDriver driver, string javascript)
